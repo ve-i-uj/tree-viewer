@@ -2,8 +2,10 @@ version: '3'
 
 services:
   tree-viewer-postgres:
-    build: ./dockerfile/postgres/
+    build:
+      context: ./docker/postgres/
+      dockerfile: Dockerfile
     restart: always
     ports:
       - 5432:5432
-    
+    container_name: pg_tree_viewer
