@@ -9,6 +9,7 @@ setup(
     install_requires=[
         'aiohttp',
         'environs',
+        'aiohttp-swagger',
     ],
     url='',
     author='Aleksei Burov',
