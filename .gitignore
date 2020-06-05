@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Eclipse
+.project
+.pydevproject
+.tracecompass/
+.settings/
+
+# Локальный конфиг
+.env
+
+
+# Виртуальное окружение python проекта
+.pyvenv
