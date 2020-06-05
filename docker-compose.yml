@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  tree-viewer-postgres:
+    build: ./dockerfile/postgres/
+    restart: always
+    ports:
+      - 5432:5432
+    
