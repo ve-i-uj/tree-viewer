@@ -4,7 +4,6 @@
 
 import logging
 
-import aiopg.sa
 from aiohttp import web
 from aiohttp_swagger import setup_swagger
 

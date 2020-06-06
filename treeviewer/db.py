@@ -6,7 +6,6 @@ import uuid
 
 import aiopg.sa
 from sqlalchemy import Column, ForeignKey, String, DateTime
-
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -23,7 +22,8 @@ Base = declarative_base()
 
 class Node(Base):
     __tablename__ = 'node'
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4,
+                unique=True, nullable=False)
     parent_id = Column(UUID(as_uuid=True), ForeignKey('node.id'), nullable=True)
     title = Column(String(length=256), nullable=False)
     registered_in = Column(DateTime, default=datetime.datetime.utcnow)

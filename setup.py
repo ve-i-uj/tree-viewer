@@ -13,6 +13,7 @@ setup(
         'aiohttp-swagger',
         'aiopg',
         'sqlalchemy ',
+        'anytree',
     ],
     url='',
     author='Aleksei Burov',
