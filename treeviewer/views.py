@@ -1,7 +1,9 @@
 """???"""
 
 from aiohttp import web
+from sqlalchemy.sql import select
 
+from treeviewer import db
 from treeviewer.misc import settings
 
 
@@ -55,9 +57,11 @@ async def tree(request):
       400:
         description: Invalid request data
     """
-    name = request.match_info.get('name', "Anonymous")
-    text = "Hello, " + name
-    return web.Response(text=text)
+    conn = request.app['pg'].acquire()
+    async with conn as conn:
+        resultproxy = await conn.execute(select([db.Node]))
+        rows = await resultproxy.fetchall()
+    return web.Response(text='\n'.join(rows))
 
 
 async def ping(request):
@@ -75,3 +79,14 @@ async def ping(request):
             description: invalid HTTP Method
     """
     return web.Response(text="pong")
+
+
+# создать данные (пересоздать)
+async def create_tree(request):
+    # Account - это декларативный класс, model - это модуль
+    self.conn = request.app['pg'].acquire()
+    self.table = model.Account.__table__
+    self.args = request['args']
+
+    async with self.conn as conn:
+        await conn.execute(self.table.insert().values(**data))

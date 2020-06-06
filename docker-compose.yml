@@ -7,5 +7,5 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - 5432:5432
+      - ${PG_PORT}:5432
     container_name: pg_tree_viewer
