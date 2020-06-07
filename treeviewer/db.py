@@ -8,16 +8,17 @@ import aiopg.sa
 from sqlalchemy import Column, ForeignKey, String, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm.collections import attribute_mapped_collection
 from sqlalchemy.schema import CreateTable, DropTable
 
 from treeviewer.misc import settings
 
 DSN = "postgresql://{user}:{password}@{host}:{port}/{database}"
 
-logger = logging.getLogger(__name__)
-
 Base = declarative_base()
+
+logger = logging.getLogger(__name__)
 
 
 class Node(Base):
@@ -27,7 +28,9 @@ class Node(Base):
     parent_id = Column(UUID(as_uuid=True), ForeignKey('node.id'), nullable=True)
     title = Column(String(length=256), nullable=False)
     registered_in = Column(DateTime, default=datetime.datetime.utcnow)
-    children = relationship("Node")
+    children = relationship("Node", cascade="all, delete-orphan",
+                                    backref=backref('parent', remote_side=[id]),
+                                    collection_class=attribute_mapped_collection('id'))
 
 
 async def init_engine():

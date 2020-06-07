@@ -8,7 +8,7 @@ from aiohttp import web
 from aiohttp_swagger import setup_swagger
 
 import treeviewer
-from treeviewer import routes, db
+from treeviewer import routes, db, utils
 from treeviewer.misc import log, settings
 
 logger = logging.getLogger(__name__)
@@ -21,6 +21,9 @@ async def on_startup_postgresql(app):
     await db.create_tables(engine, recreate_if_exists)
     app['pg'] = engine
     logger.debug('Tables initialized ...')
+
+    if settings.ENV('FILL_TABLE_ON_STARTUP') == 'true':
+        await utils.create_tree(engine)
 
 
 async def on_shutdown_postgresql(app):
