@@ -91,7 +91,7 @@ async def find_subtree(request):
       in: query
       required: false
       type: integer
-      description: Sample size
+      description: Subtree size
       default: 1
       enum: [1, 2, 3, 4, 5]
     responses:
@@ -102,10 +102,30 @@ async def find_subtree(request):
     """
 
     id_ = request.rel_url.query.get('root_id')
+    sort_fld = request.rel_url.query.get('sort_fld')
+    sort_dir = request.rel_url.query.get('sort_dir')
+    depth = request.rel_url.query.get('depth')
+
+    # Проверки корректности аргументов.
     try:
         uuid.UUID(id_, version=4)
     except ValueError:
         raise web.HTTPBadRequest(reason=f'root_id should be UUID (gotten root_id = {id_}).')
+
+    if sort_fld.strip() not in ['id', 'parеnt_id', 'title', 'registered_in']:
+        raise web.HTTPBadRequest(reason='Invalid "sort_fld" value. See SwaggerAPI.')
+
+    if sort_dir.strip() not in ['asc', 'dsc']:
+        raise web.HTTPBadRequest(reason='Invalid "sort_dir" value. See SwaggerAPI.')
+
+    try:
+        depth = int(depth.strip())
+    except ValueError:
+        raise web.HTTPBadRequest(reason='Invalid "depth" value. See SwaggerAPI.')
+    if depth > settings.ENV.int('TREE_DEPTH'):
+        raise web.HTTPBadRequest(
+            reason=(f'Argument "depth" CANNOT be more than {settings.ENV.int("TREE_DEPTH")}.'
+                    f' See SwaggerAPI.'))
 
     tbl = db.Node.__table__
 
@@ -126,13 +146,15 @@ async def find_subtree(request):
                 raise web.HTTPBadRequest(reason=f'No node `{id_}` in the DB.')
             id_ = str(root_node['id'])
 
+    # Создаю SQL код и выполняю его асинхронно. По другому не нашёл, как можно
+    # сформировать рекурсивный запрос.
     Session = sessionmaker()
     engine = request.app['pg']
     Session.configure(bind=engine)
     session = Session()
 
     # TODO: (burov_alexey@mail.ru 7 июн. 2020 г. 16:22:54)
-    # Нужно задавать глубину рекурсии
+    # Нужно задавать глубину рекурсии (но скорей всего нужна будет другая модель)
     included = session.query(
         db.Node
     ).filter(

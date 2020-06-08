@@ -6,6 +6,16 @@ services:
       context: ./docker/postgres/
       dockerfile: Dockerfile
     restart: always
+    network_mode: host
     ports:
       - ${PG_PORT}:5432
     container_name: pg_tree_viewer
+  tree-viewer:
+    build:
+      context: .
+      dockerfile: ./docker/tree-viewer/Dockerfile
+    restart: always
+    network_mode: host
+    ports:
+      - ${APP_PORT}:8080
+    container_name: tree_viewer

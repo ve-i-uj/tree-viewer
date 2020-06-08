@@ -6,7 +6,7 @@ setup(
     packages=find_packages(exclude=['tests*']),
     description=('The service for executing queries in the database'
                  ' according to the specified parameters'),
-    long_description=open('README.md').read(),
+    long_description=open('README.md', encoding='utf-8').read(),
     install_requires=[
         'aiohttp',
         'environs',
