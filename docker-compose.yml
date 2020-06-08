@@ -18,4 +18,7 @@ services:
     network_mode: host
     ports:
       - ${APP_PORT}:8080
+    depends_on:
+      - tree-viewer-postgres
+    command: ["bash", "./script/wait-for-postgres.sh", "127.0.0.1", "python3.7", "./treeviewer/main.py"]
     container_name: tree_viewer

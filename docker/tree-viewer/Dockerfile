@@ -5,7 +5,8 @@ RUN apt-get update \
     && add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update
 
-RUN apt-get install -y build-essential python3.7 python3.7-dev python3-pip python3.7-venv \
+RUN apt-get install -y build-essential python3.7 python3.7-dev \
+        python3-pip python3.7-venv postgresql-client \
     && apt-get install -y git
 
 # update pip

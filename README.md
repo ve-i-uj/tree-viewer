@@ -31,7 +31,7 @@
 ```
 YOUR_REPOS_DIR=<YOUR_REPOS_DIR>
 cd $YOUR_REPOS_DIR
-git clone git@github.com:ve-i-uj/tree-viewer.git
+git clone https://github.com/ve-i-uj/tree-viewer.git
 PROJECT_DIR=$YOUR_REPOS_DIR/tree-viewer
 ```
 
