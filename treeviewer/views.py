@@ -107,10 +107,11 @@ async def find_subtree(request):
     depth = request.rel_url.query.get('depth')
 
     # Проверки корректности аргументов.
-    try:
-        uuid.UUID(id_, version=4)
-    except ValueError:
-        raise web.HTTPBadRequest(reason=f'root_id should be UUID (gotten root_id = {id_}).')
+    if id_ is not None:
+        try:
+            uuid.UUID(id_, version=4)
+        except ValueError:
+            raise web.HTTPBadRequest(reason=f'root_id should be UUID (gotten root_id = {id_}).')
 
     if sort_fld.strip() not in ['id', 'parеnt_id', 'title', 'registered_in']:
         raise web.HTTPBadRequest(reason='Invalid "sort_fld" value. See SwaggerAPI.')
